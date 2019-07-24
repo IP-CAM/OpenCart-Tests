@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opencart.Tests", "Opencart.Tests\Opencart.Tests.csproj", "{C730A2BD-65F1-446A-8416-6093037142EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selenium", "Selenium\Selenium.csproj", "{CA49EA46-A94D-4BF9-881C-A80625B8F62D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C730A2BD-65F1-446A-8416-6093037142EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C730A2BD-65F1-446A-8416-6093037142EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C730A2BD-65F1-446A-8416-6093037142EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C730A2BD-65F1-446A-8416-6093037142EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA49EA46-A94D-4BF9-881C-A80625B8F62D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA49EA46-A94D-4BF9-881C-A80625B8F62D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA49EA46-A94D-4BF9-881C-A80625B8F62D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA49EA46-A94D-4BF9-881C-A80625B8F62D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {33D856EB-6535-4468-863C-9BE358C64343}
+	EndGlobalSection
+EndGlobal
