@@ -22,7 +22,7 @@ namespace Tests
             mydriver.FindElement(By.XPath("//a[contains(text(),'Login')]")).Click();
             mydriver.FindElement(By.Id("input-email")).SendKeys("johnsmith@gmail.com");
             mydriver.FindElement(By.Id("input-password")).SendKeys("12121212" + Keys.Enter);
-            //mydriver.FindElement(By.TagName("form")).Submit();
+            
 
         }
 
