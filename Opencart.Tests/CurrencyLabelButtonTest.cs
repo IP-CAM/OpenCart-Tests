@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.IO;
+using System.Reflection;
 
 namespace Opencart.Tests
 {
@@ -16,7 +18,7 @@ namespace Opencart.Tests
         [SetUp]
         public void Setup()
         {
-            MyDriver = new ChromeDriver(@"C:\Users\Oleg\Source\Repos\Opencart.Tests\Opencart.Tests\bin\Debug\netcoreapp2.1");
+            MyDriver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             MyDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
             MyDriver.Manage().Window.Maximize();
