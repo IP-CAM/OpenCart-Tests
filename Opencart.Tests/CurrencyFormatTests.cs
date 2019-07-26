@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Opencart.Tests
 {
     [TestFixture]
-    class CurrencyFormatTest
+    class CurrencyFormatTests
     {
         IWebDriver MyDriver;
         [SetUp]
@@ -53,9 +53,9 @@ namespace Opencart.Tests
             Assert.IsTrue(result >= 0);
         }
 
-        [TestCase("USD", @"^\$\d+\.?\d*")]
-        [TestCase("EUR", @"\d+\.?\d*€$")]
-        [TestCase("GBP", @"^£\d+\.?\d*")]
+        [TestCase("USD", @"^\$\d+\.?\d{2}")]
+        [TestCase("EUR", @"\d+\.?\d{2}€$")]
+        [TestCase("GBP", @"^£\d+\.?\d{2}")]
         public void CheckCurrencyFormat(string currency, string pattern)
         {
             MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();

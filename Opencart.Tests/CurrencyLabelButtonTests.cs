@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Opencart.Tests
 {
     [TestFixture]
-    class CurrencyLabelButtonTest
+    class CurrencyLabelButtonTests
     {
         IWebDriver MyDriver;
 

@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Opencart.Tests
 {
     [TestFixture]
-    class ConversionCurrenciesTest
+    class ConversionCurrenciesTests
     {
         decimal EurRate;
         decimal GbpRate;
