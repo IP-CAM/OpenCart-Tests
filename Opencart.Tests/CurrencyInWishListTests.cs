@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Text;
 using NUnit.Framework;
-using System.Linq;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -26,12 +24,13 @@ namespace Opencart.Tests
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Login')]")).Click();
             MyDriver.FindElement(By.Id("input-email")).SendKeys("johnsmith@gmail.com");
             MyDriver.FindElement(By.Id("input-password")).SendKeys("12121212" + Keys.Enter);
+            MyDriver.FindElement(By.XPath("//a[text()='Phones & PDAs']")).Click();
         }
 
         [TearDown]
         public void TearDown()
         {
-            MyDriver.Quit();
+           MyDriver.Quit();
         }
 
         [TestCase("USD", @"^\$\d+\.?\d{2}")]
@@ -39,7 +38,6 @@ namespace Opencart.Tests
         [TestCase("GBP", @"^£\d+\.?\d{2}")]
         public void CheckPriceIsInCorrectCurrencyFormat(string currency, string pattern)
         {
-            MyDriver.FindElement(By.CssSelector("[href='http://192.168.17.128/opencart/upload/index.php?route=product/category&path=24']")).Click();
             MyDriver.FindElement(By.CssSelector("[data-original-title='Add to Wish List']")).Click();
             MyDriver.FindElement(By.CssSelector("#wishlist-total")).Click();
             MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();

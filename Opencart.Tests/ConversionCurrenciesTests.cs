@@ -55,7 +55,6 @@ namespace Opencart.Tests
         public void CheckEurConversion()
         {
             decimal Conversion =Math.Round(UsdPrice * EurRate, 2);
-            
             Assert.AreEqual(Conversion, EurPrice);
         }
         [Test]

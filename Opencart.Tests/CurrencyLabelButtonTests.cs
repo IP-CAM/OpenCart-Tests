@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Text;
 using NUnit.Framework;
-using System.Linq;
 using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -22,7 +20,6 @@ namespace Opencart.Tests
             MyDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
             MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.CssSelector(".owl-wrapper-outer")).Click();
         }
 
         [TearDown]
