@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.IO;
@@ -13,7 +12,7 @@ namespace Opencart.Tests
     {
         IWebDriver MyDriver;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             MyDriver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
@@ -22,7 +21,7 @@ namespace Opencart.Tests
             MyDriver.Manage().Window.Maximize();
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             MyDriver.Quit();
@@ -31,13 +30,11 @@ namespace Opencart.Tests
         [TestCase("USD", @"^\$ Currency")]
         [TestCase("EUR", @"^€ Currency")]
         [TestCase("GBP", @"^\£ Currency")]
-        public void CheckCurrencyLabel(string currency, string puttern)
+        public void CheckCurrencyLabel(string currency, string pattern)
         {
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name(currency)).Click();
+            ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
             string Actual = MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Text;
-            Regex Puttern = new Regex(puttern);
-            Assert.IsTrue(Puttern.IsMatch(Actual));
+            StringAssert.IsMatch(pattern, Actual);
         }
     }
 }

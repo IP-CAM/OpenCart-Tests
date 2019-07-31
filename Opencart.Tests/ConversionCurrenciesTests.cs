@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Text;
 using NUnit.Framework;
-using System.Linq;
-using System.Text.RegularExpressions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.IO;
@@ -15,7 +12,7 @@ namespace Opencart.Tests
     {
         decimal EurRate;
         decimal GbpRate;
-        decimal UsdPrice;
+        decimal UsdPrice;  
         decimal EurPrice;
         decimal GbpPrice;     
 
@@ -24,10 +21,7 @@ namespace Opencart.Tests
         {
             IWebDriver MyDriver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             MyDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/admin/");
-            MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.Id("input-username")).SendKeys("admin");
-            MyDriver.FindElement(By.Id("input-password")).SendKeys("Lv414_Taqc" + Keys.Enter);
+            ServiceMethodsSet.AdminLogIn(MyDriver, "admin", "Lv414_Taqc");
             MyDriver.FindElement(By.Id("menu-system")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Localisation')]")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Currencies')]")).Click();
@@ -38,16 +32,12 @@ namespace Opencart.Tests
             MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
             MyDriver.Manage().Window.Maximize();
             MyDriver.FindElement(By.CssSelector(".owl-wrapper-outer")).Click();
-            UsdPrice = Decimal.Parse(MyDriver.FindElements(By.XPath("//div[@id='content']//div[@class='col-sm-4']/ul[count(*)=2]/li"))[0]
-                .Text.Substring(1).Replace('.', ','));
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name("EUR")).Click();
-            EurPrice = Decimal.Parse(MyDriver.FindElements(By.XPath("//div[@id='content']//div[@class='col-sm-4']/ul[count(*)=2]/li"))[0]
-                .Text.Substring(0, 6).Replace('.', ','));
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name("GBP")).Click();
-            GbpPrice = Decimal.Parse(MyDriver.FindElements(By.XPath("//div[@id='content']//div[@class='col-sm-4']/ul[count(*)=2]/li"))[0]
-                .Text.Substring(1).Replace('.', ','));
+            ServiceMethodsSet.ChangeCurrency(MyDriver, "USD");
+            UsdPrice = ServiceMethodsSet.GetPriceValue(MyDriver);
+            ServiceMethodsSet.ChangeCurrency(MyDriver, "EUR");
+            EurPrice = ServiceMethodsSet.GetPriceValue(MyDriver);
+            ServiceMethodsSet.ChangeCurrency(MyDriver, "GBP");
+            GbpPrice = ServiceMethodsSet.GetPriceValue(MyDriver);
             MyDriver.Quit();
         }
 

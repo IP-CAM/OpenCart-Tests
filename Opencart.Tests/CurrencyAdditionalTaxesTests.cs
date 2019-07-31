@@ -24,10 +24,7 @@ namespace Opencart.Tests
         {
             MyDriver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             MyDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/admin/");
-            MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.Id("input-username")).SendKeys("admin");
-            MyDriver.FindElement(By.Id("input-password")).SendKeys("Lv414_Taqc" + Keys.Enter);
+            ServiceMethodsSet.AdminLogIn(MyDriver, "admin", "Lv414_Taqc");
 
             MyDriver.FindElement(By.Id("menu-system")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Localisation')]")).Click();
@@ -77,27 +74,16 @@ namespace Opencart.Tests
             SelectElement PercentageTaxBased = new SelectElement(MyDriver.FindElement(By.CssSelector($"#tax-rule-row{AllSelects.Count / 2} select[name = 'tax_rule[{AllSelects.Count / 2}][based]']")));
             PercentageTaxBased.SelectByText("Shipping Address");
             MyDriver.FindElement(By.CssSelector("button[data-original-title='Save']")).Click();
-
-            MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
-            MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.XPath("//span[contains(text(),'My Account')]")).Click();
-            MyDriver.FindElement(By.XPath("//a[contains(text(),'Login')]")).Click();
-            MyDriver.FindElement(By.Id("input-email")).SendKeys("johnsmith@gmail.com");
-            MyDriver.FindElement(By.Id("input-password")).SendKeys("12121212" + Keys.Enter);
-            MyDriver.FindElement(By.XPath("//a[text()='Phones & PDAs']")).Click();
-            MyDriver.FindElement(By.CssSelector(".product-layout .fa.fa-shopping-cart")).Click();
-            MyDriver.FindElement(By.CssSelector("a[title='Shopping Cart']")).Click();
-
+            
+            ServiceMethodsSet.UserLogIn(MyDriver, "johnsmith@gmail.com", "12121212");
+            ServiceMethodsSet.AddProductToShoppingCart(MyDriver);
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/admin/");
-            MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.Id("input-username")).SendKeys("admin");
-            MyDriver.FindElement(By.Id("input-password")).SendKeys("Lv414_Taqc" + Keys.Enter);
-
+            ServiceMethodsSet.AdminLogIn(MyDriver, "admin", "Lv414_Taqc");
+            
             MyDriver.FindElement(By.Id("menu-system")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Localisation')]")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Taxes')]")).Click();
@@ -145,18 +131,9 @@ namespace Opencart.Tests
         [TestCase("GBP", @"^£\d+\.\d{2}")]
         public void CheckCurrencyFormat(string currency, string pattern)
         {
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name(currency)).Click();
-            MyDriver.FindElement(By.CssSelector("a[href='#collapse-shipping']")).Click();
-            SelectElement ShippingCountry = new SelectElement(MyDriver.FindElement(By.Id("input-country")));
-            ShippingCountry.SelectByText("Ukraine");
-            SelectElement Zone = new SelectElement(MyDriver.FindElement(By.Id("input-zone")));
-            Zone.SelectByText("L'vivs'ka Oblast'");
-            MyDriver.FindElement(By.Id("input-postcode")).Clear();
-            MyDriver.FindElement(By.Id("input-postcode")).SendKeys("123456");
-            MyDriver.FindElement(By.Id("button-quote")).Click();
-            MyDriver.FindElement(By.CssSelector("#modal-shipping input[value='flat.flat']")).Click();
-            MyDriver.FindElement(By.Id("button-shipping")).Click();
+            ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
+            ServiceMethodsSet.ChooseShippingDetails(MyDriver, "Ukraine", "L'vivs'ka Oblast'", "123456");
+            
             SubTotal = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'Sub-Total:')]/parent::td/following-sibling::td")).Text;
             FlatShippingRate = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'Flat Shipping Rate:')]/parent::td/following-sibling::td")).Text;
             FixedTestTax = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'FixedTestTax:')]/parent::td/following-sibling::td")).Text;
@@ -173,23 +150,13 @@ namespace Opencart.Tests
             Console.WriteLine(PercentageTestTax);
         }
 
-        [TestCase("USD")]
+        [TestCase("USD")]   
         [TestCase("EUR")]
         [TestCase("GBP")]
         public void CheckCorrectCalculationOfPersentageTax(string currency)
         {
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name(currency)).Click();
-            MyDriver.FindElement(By.CssSelector("a[href='#collapse-shipping']")).Click();
-            SelectElement ShippingCountry = new SelectElement(MyDriver.FindElement(By.Id("input-country")));
-            ShippingCountry.SelectByText("Ukraine");
-            SelectElement Zone = new SelectElement(MyDriver.FindElement(By.Id("input-zone")));
-            Zone.SelectByText("L'vivs'ka Oblast'");
-            MyDriver.FindElement(By.Id("input-postcode")).Clear();
-            MyDriver.FindElement(By.Id("input-postcode")).SendKeys("123456");
-            MyDriver.FindElement(By.Id("button-quote")).Click();
-            MyDriver.FindElement(By.CssSelector("#modal-shipping input[value='flat.flat']")).Click();
-            MyDriver.FindElement(By.Id("button-shipping")).Click();
+            ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
+            ServiceMethodsSet.ChooseShippingDetails(MyDriver, "Ukraine", "L'vivs'ka Oblast'", "123456");
             SubTotal = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'Sub-Total:')]/parent::td/following-sibling::td")).Text;
             FlatShippingRate = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'Flat Shipping Rate:')]/parent::td/following-sibling::td")).Text;
             PercentageTestTax = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'PercentageTestTax:')]/parent::td/following-sibling::td")).Text;
@@ -209,33 +176,19 @@ namespace Opencart.Tests
         [TestCase("GBP")]
         public void CheckFixedTaxHasTheSameValueAsInAdminPanel(string currency)
         {
-            MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/admin/");
-            MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.Id("input-username")).SendKeys("admin");
-            MyDriver.FindElement(By.Id("input-password")).SendKeys("Lv414_Taqc" + Keys.Enter);
+            ServiceMethodsSet.AdminLogIn(MyDriver, "admin", "Lv414_Taqc");
             MyDriver.FindElement(By.Id("menu-system")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Localisation')]")).Click();
             MyDriver.FindElement(By.XPath("//a[contains(text(),'Currencies')]")).Click();            
 
             decimal XRate = Decimal.Parse(MyDriver.FindElement(By.XPath($"//td[text()='{currency}']/following-sibling::td[@class='text-right'][count(*)=0]")).Text.Replace('.', ','));
-            Console.WriteLine(XRate);
-
-            MyDriver.FindElement(By.CssSelector("#header .nav.pull-right>li>a[href]")).Click();
+            ServiceMethodsSet.AdminLogOut(MyDriver);
 
             MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
             MyDriver.FindElement(By.CssSelector("a[title='Shopping Cart']")).Click();
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name(currency)).Click();
-            MyDriver.FindElement(By.CssSelector("a[href='#collapse-shipping']")).Click();
-            SelectElement ShippingCountry = new SelectElement(MyDriver.FindElement(By.Id("input-country")));
-            ShippingCountry.SelectByText("Ukraine");
-            SelectElement Zone = new SelectElement(MyDriver.FindElement(By.Id("input-zone")));
-            Zone.SelectByText("L'vivs'ka Oblast'");
-            MyDriver.FindElement(By.Id("input-postcode")).Clear();
-            MyDriver.FindElement(By.Id("input-postcode")).SendKeys("123456");
-            MyDriver.FindElement(By.Id("button-quote")).Click();
-            MyDriver.FindElement(By.CssSelector("#modal-shipping input[value='flat.flat']")).Click();
-            MyDriver.FindElement(By.Id("button-shipping")).Click();
+
+            ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
+            ServiceMethodsSet.ChooseShippingDetails(MyDriver, "Ukraine", "L'vivs'ka Oblast'", "123456");
 
             int Quantity = Int32.Parse(MyDriver.FindElement(By.CssSelector("input[name^='quantity']")).GetAttribute("value"));
             FixedTestTax = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'FixedTestTax:')]/parent::td/following-sibling::td")).Text;
@@ -252,19 +205,8 @@ namespace Opencart.Tests
         public void CheckCorrectCulculationOfTotal(string currency)
         {
             MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
-            MyDriver.FindElement(By.CssSelector("a[title='Shopping Cart']")).Click();
-            MyDriver.FindElement(By.CssSelector("button.btn.btn-link.dropdown-toggle")).Click();
-            MyDriver.FindElement(By.Name(currency)).Click();
-            MyDriver.FindElement(By.CssSelector("a[href='#collapse-shipping']")).Click();
-            SelectElement ShippingCountry = new SelectElement(MyDriver.FindElement(By.Id("input-country")));
-            ShippingCountry.SelectByText("Ukraine");
-            SelectElement Zone = new SelectElement(MyDriver.FindElement(By.Id("input-zone")));
-            Zone.SelectByText("L'vivs'ka Oblast'");
-            MyDriver.FindElement(By.Id("input-postcode")).Clear();
-            MyDriver.FindElement(By.Id("input-postcode")).SendKeys("123456");
-            MyDriver.FindElement(By.Id("button-quote")).Click();
-            MyDriver.FindElement(By.CssSelector("#modal-shipping input[value='flat.flat']")).Click();
-            MyDriver.FindElement(By.Id("button-shipping")).Click();
+            MyDriver.FindElement(By.CssSelector("a[title='Shopping Cart']")).Click();ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
+            ServiceMethodsSet.ChooseShippingDetails(MyDriver, "Ukraine", "L'vivs'ka Oblast'", "123456");
 
             string SubTotal = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'Sub-Total:')]/parent::td/following-sibling::td")).Text;
             string FlatShippingRate = MyDriver.FindElement(By.XPath("//div[@id='content']//strong[contains(text(),'Flat Shipping Rate:')]/parent::td/following-sibling::td")).Text;
