@@ -77,6 +77,8 @@ namespace Opencart.Tests
             
             ServiceMethodsSet.UserLogIn(MyDriver, "johnsmith@gmail.com", "12121212");
             ServiceMethodsSet.AddProductToShoppingCart(MyDriver);
+
+            MyDriver.FindElement(By.CssSelector("a[title='Shopping Cart']")).Click();
         }
 
         [OneTimeTearDown]

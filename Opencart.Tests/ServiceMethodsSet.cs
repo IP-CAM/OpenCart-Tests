@@ -60,13 +60,12 @@ namespace Opencart.Tests
         {
             driver.FindElement(By.XPath("//a[text()='Phones & PDAs']")).Click();
             driver.FindElement(By.CssSelector(".product-layout .fa.fa-shopping-cart")).Click();
-            driver.FindElement(By.CssSelector("a[title='Shopping Cart']")).Click();
         }
 
         public static decimal GetPriceValue(IWebDriver driver)
         {
             string Price = Regex.Match(driver.FindElements(By.XPath("//div[@id='content']//div[@class='col-sm-4']/ul[count(*)=2]/li"))[0]
-                .Text, @"-?\d+\.\d{2}").Value.Replace('.', ',');
+                .Text, @"\d+\.\d{2}").Value.Replace('.', ',');
             decimal Value = Decimal.Parse(Price);
             return Value;
         }

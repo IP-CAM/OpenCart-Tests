@@ -18,7 +18,7 @@ namespace Opencart.Tests
             MyDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             MyDriver.Navigate().GoToUrl(@"http://192.168.17.128/opencart/upload/");
             MyDriver.Manage().Window.Maximize();
-            MyDriver.FindElement(By.CssSelector(".owl-wrapper-outer")).Click();
+            MyDriver.FindElement(By.CssSelector(".image")).Click();
         }
 
         [OneTimeTearDown]
@@ -32,6 +32,7 @@ namespace Opencart.Tests
         [TestCase("GBP")]
         public void CheckPriceIsPositiveNumber(string currency)
         {
+            
             ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
             decimal ActualResult = ServiceMethodsSet.GetPriceValue(MyDriver);
             Assert.IsTrue(ActualResult >= 0);
@@ -53,6 +54,12 @@ namespace Opencart.Tests
         public void CheckCurrencyFormatOfOldPrice(string currency, string pattern)
         {
             ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
+            MyDriver.FindElement(By.Name("search")).Clear();
+            MyDriver.FindElement(By.Name("search")).SendKeys("Canon EOS 5D");
+            MyDriver.FindElement(By.CssSelector("#search button")).Click();
+            MyDriver.FindElement(By.CssSelector(".caption a")).Click();
+            string OLdPrice = MyDriver.FindElement(By.CssSelector("#content li>span[style]")).Text;
+            StringAssert.IsMatch(pattern, OLdPrice);
 
         }
 
@@ -61,11 +68,10 @@ namespace Opencart.Tests
         [TestCase("GBP", @"^£\d+\.?\d{2}")]
         public void CheckCurrencyFormatOfExTax(string currency, string pattern)
         {
-            ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
+           ServiceMethodsSet.ChangeCurrency(MyDriver, currency);
             string ExTaxAllText = MyDriver.FindElement(By.XPath("//div[@id='content']//div[@class='col-sm-4']//li/h2/../following-sibling::li[contains(text(), 'Ex Tax')]")).Text;
-            int SemicolumnIndex = ExTaxAllText.IndexOf(":");
-            string ExTax = ExTaxAllText.Substring(SemicolumnIndex + 1).Trim();
-            Console.WriteLine(ExTax);
+            int СolщnIndex = ExTaxAllText.IndexOf(":");
+            string ExTax = ExTaxAllText.Substring(СolщnIndex + 1).Trim();
             StringAssert.IsMatch(pattern, ExTax);
         }
     }
